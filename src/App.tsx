@@ -1,45 +1,57 @@
-import { useState } from 'react'
-import logo from './logo.svg'
-import './App.css'
+import { useState } from "react";
+import { TodoForm } from "./components/TodoForm";
+import { Task } from "./components/Task";
+import { TodoTaskList } from "./components/TodoTaskList";
+import { v4 as uuidv4 } from "uuid";
+
+import { Header } from "./components/Header";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [todos, setTodos] = useState<Task[]>([]);
+  const [taskCount, setTaskCount] = useState<number>(0);
+  const [taskDoneCount, setTaskDoneCount] = useState<number>(0);
+
+  function handleOnCreateTask(content: string) {
+    const newItemId = uuidv4();
+    setTodos([...todos, new Task(newItemId, content, false)]);
+    setTaskCount(taskCount + 1);
+  }
+
+  function handleOnTodoTaskDone(itemId: string, isDone: boolean) {
+    const updatedTodos = todos.map((todo) => {
+      if (todo.id === itemId) {
+        todo.done = isDone;
+        setTaskDoneCount(taskDoneCount + (isDone ? 1 : -1));
+      }
+      return todo;
+    });
+
+    setTodos(updatedTodos);
+  }
+
+  function handleOnTodoTaskDelete(itemId: string) {
+    const updatedTodos = todos.filter((todo) => {
+      if (todo.id === itemId && todo.done) setTaskDoneCount(taskDoneCount - 1);
+      return todo.id !== itemId;
+    });
+
+    setTodos(updatedTodos);
+    setTaskCount(taskCount - 1);
+  }
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>Hello Vite + React!</p>
-        <p>
-          <button type="button" onClick={() => setCount((count) => count + 1)}>
-            count is: {count}
-          </button>
-        </p>
-        <p>
-          Edit <code>App.tsx</code> and save to test HMR updates.
-        </p>
-        <p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-          {' | '}
-          <a
-            className="App-link"
-            href="https://vitejs.dev/guide/features.html"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Vite Docs
-          </a>
-        </p>
-      </header>
+    <div>
+      <Header />
+      <TodoForm onCreateTask={handleOnCreateTask} />
+      <TodoTaskList
+        todos={todos}
+        taskCount={taskCount}
+        taskDoneCount={taskDoneCount}
+        onTaskDone={handleOnTodoTaskDone}
+        onTaskDelete={handleOnTodoTaskDelete}
+      />
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
