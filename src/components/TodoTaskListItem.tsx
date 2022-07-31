@@ -1,32 +1,39 @@
 import { ChangeEvent } from "react";
 import { Task } from "./Task";
+import { Trash } from "phosphor-react";
+
+import styles from "./TodoTaskListItem.module.css";
 
 interface TodoItemProps {
   todo: Task;
-  onTodoItemDone: (todoItemId: string, isDone: boolean) => void;
-  onTodoItemDelete: (todoItemId: string) => void;
+  onTaskDone: (todoItemId: string, isDone: boolean) => void;
+  onTaskDelete: (todoItemId: string) => void;
 }
 
 export function TodoTaskListItem({
   todo,
-  onTodoItemDone,
-  onTodoItemDelete,
+  onTaskDone,
+  onTaskDelete,
 }: TodoItemProps) {
   function handleOnDone(event: ChangeEvent<HTMLInputElement>) {
     const isDone: boolean = event?.target.checked;
-    onTodoItemDone(todo.id, isDone);
+    onTaskDone(todo.id, isDone);
   }
 
   function handleOnDelete() {
-    onTodoItemDelete(todo.id);
+    onTaskDelete(todo.id);
   }
 
   return (
-    <div>
+    <div className={styles.task}>
       <input type="checkbox" onChange={handleOnDone} checked={todo.done} />
-      <span>{todo.content}</span>
+      {todo.done ? (
+        <span className={styles.done}>{todo.content}</span>
+      ) : (
+        <span>{todo.content}</span>
+      )}
       <button value={todo.id} onClick={handleOnDelete}>
-        Delete
+        <Trash size={20} />
       </button>
     </div>
   );

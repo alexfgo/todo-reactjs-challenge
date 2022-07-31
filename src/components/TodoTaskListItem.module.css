@@ -1,0 +1,41 @@
+.task {
+    display: flex;
+    gap: 0.75rem;
+    align-items: baseline;
+    
+    padding: 1rem;
+    margin-bottom: 0.75rem;
+    
+    background: var(--grey-500);    
+    border: 1px solid var(--grey-400);
+    border-radius: 0.5rem;
+}
+
+.task input[type=checkbox] {
+    border: 1px solid var(--blue-light);
+}
+
+.task span {
+    font-weight: 400;
+    font-size: 0.875rem;
+    color: var(--grey-100);
+    flex-grow: 1;
+}
+
+.task span.done {
+    color: var(--grey-300);
+    text-decoration: line-through;
+}
+
+.task button {
+    background: transparent;
+    border: 0;
+    color: var(--grey-300);
+    cursor: pointer;
+    line-height: 0;
+    border-radius: 2px;
+}
+
+.task button:hover {
+    color: var(--red-500);
+}
